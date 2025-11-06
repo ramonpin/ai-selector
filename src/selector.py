@@ -1,5 +1,6 @@
 """Interactive agent selector using questionary."""
 
+from pathlib import Path
 import questionary
 from questionary import Style
 
@@ -23,6 +24,22 @@ custom_style = Style(
 )
 
 
+def display_logo() -> None:
+    """Display the AI Selector logo from logo.txt file."""
+    # Get project root directory (parent of src)
+    project_root = Path(__file__).parent.parent
+    logo_path = project_root / "logo.txt"
+
+    try:
+        with open(logo_path, "r", encoding="utf-8") as f:
+            logo = f.read()
+            print(logo)
+            print()  # Add blank line after logo for spacing
+    except FileNotFoundError:
+        # Silently continue if logo file doesn't exist
+        pass
+
+
 def select_agent(agents: list[Agent]) -> Agent | None:
     """
     Display an interactive menu to select an agent.
@@ -36,6 +53,9 @@ def select_agent(agents: list[Agent]) -> Agent | None:
     if not agents:
         print("No agents available.")
         return None
+
+    # Display logo
+    display_logo()
 
     # Sort agents by name for consistent display
     agents = sorted(agents, key=lambda a: a.name)

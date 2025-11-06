@@ -11,6 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Key Features
 - Automatic agent discovery via `.env` files
 - Interactive CLI menu using questionary
+- Branded logo display with ANSI color support
 - Agent commands configured via `ALIAS` variable in each agent's `.env`
 - Environment variable support for agent directory location
 - Automatic loading of agent-specific environment variables
@@ -50,9 +51,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `get_agents_directory()`: Resolves AI_AGENTS_DIR from environment variable
 
 **`src/selector.py`** - Interactive CLI:
+- `display_logo()`: Displays the branded logo from `logo.txt` (ANSI colors supported)
 - `select_agent()`: Presents questionary menu with agent names (sorted alphabetically)
 - Custom styling for better UX
 - Returns selected Agent or None if cancelled
+- Logo is displayed before the agent selection menu with spacing for visual separation
 
 **`src/executor.py`** - Agent execution:
 - `clear_screen()`: Clears the terminal screen (platform-aware)
@@ -128,3 +131,5 @@ Log entries are appended, creating a history of all executions.
 - Exit codes are properly propagated from agent processes
 - KeyboardInterrupt (Ctrl+C) returns exit code 130
 - Agents are sorted alphabetically in the selector menu
+- Logo is displayed from `logo.txt` in project root (optional, gracefully skipped if missing)
+- Logo supports ANSI escape codes for colored terminal output
