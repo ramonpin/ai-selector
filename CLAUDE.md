@@ -39,13 +39,54 @@ alias ai-selector='uv run --project /path/to/ai-selector /path/to/ai-selector/ma
 ```
 This ensures the agent executes in your current working directory, not in the ai-selector project directory. Note that you must specify the full path to main.py as the second argument.
 
-### Testing
-- Use `uv add --dev pytest` to add pytest as a dev dependency
-- Run tests with `uv run pytest`
+### Testing and Quality Assurance
+The project uses a comprehensive testing and quality assurance setup:
+
+**Quick Commands (using justfile):**
+- `just test` - Run the full test suite (28 tests)
+- `just lint` - Run ruff linter and formatter
+- `just qa` - Run complete quality assurance (lint + type check + tests)
+
+**Manual Commands:**
+- `uv run pytest` - Run tests with pytest
+- `uv run pytest --cov` - Run tests with coverage report
+- `uv run ruff check .` - Check code with ruff linter
+- `uv run ruff format .` - Format code with ruff
+- `uv run mypy .` - Type check with mypy
+
+**Pre-commit Hooks:**
+The project uses pre-commit hooks that automatically run on every commit:
+- Trailing whitespace removal
+- End-of-file fixer
+- YAML validation
+- Ruff linting and formatting
+- Mypy type checking
+
+Install hooks: `pre-commit install`
+
+**Test Structure:**
+- `tests/test_config.py` - Tests for agent discovery and configuration (8 tests)
+- `tests/test_selector.py` - Tests for interactive selection UI (6 tests)
+- `tests/test_executor.py` - Tests for agent execution (8 tests)
+- `tests/test_main.py` - Tests for main entry point (6 tests)
+
+**Code Quality Standards:**
+- Line length: 88 characters (ruff default)
+- Type hints required for all function definitions (mypy strict mode)
+- Docstrings required for public modules, classes, and functions
+- Import sorting enforced (ruff isort)
+- All tests must pass before commit (pre-commit hook)
 
 ## Architecture
 
 ### Module Structure
+
+**Testing Philosophy:**
+- All modules have comprehensive test coverage
+- Tests use pytest with fixtures for setup/teardown
+- Mocking is used extensively to isolate components
+- Tests validate both success and error paths
+- Type checking ensures runtime safety
 
 **`main.py`** - Entry point that orchestrates the selection flow:
 1. Discovers agents by scanning for `.env` files in `AI_AGENTS_DIR`
@@ -56,6 +97,7 @@ This ensures the agent executes in your current working directory, not in the ai
 - `Agent` dataclass: Represents an AI agent with name, command, env_vars, and env_file path
 - `discover_agents()`: Scans AI_AGENTS_DIR for subdirectories containing `.env` files with `ALIAS`
 - `get_agents_directory()`: Resolves AI_AGENTS_DIR from environment variable
+- Type-safe with strict mypy checking; uses `cast()` to ensure proper type narrowing
 
 **`src/selector.py`** - Interactive CLI:
 - `display_logo()`: Displays the branded logo from `logo.txt` (ANSI colors supported)
@@ -140,3 +182,25 @@ Log entries are appended, creating a history of all executions.
 - Agents are sorted alphabetically in the selector menu
 - Logo is displayed from `logo.txt` in project root (optional, gracefully skipped if missing)
 - Logo supports ANSI escape codes for colored terminal output
+
+## Development Workflow
+
+**Before committing:**
+1. Run `just qa` to ensure all quality checks pass
+2. Pre-commit hooks will automatically run on `git commit`
+3. If hooks fail, fix issues and re-stage changes
+4. All 28 tests must pass
+
+**Adding new features:**
+1. Write tests first (TDD approach recommended)
+2. Implement the feature
+3. Ensure type hints are complete
+4. Run `just qa` to validate
+5. Update CLAUDE.md if architecture changes
+
+**Code style:**
+- Use type hints for all function parameters and return values
+- Write descriptive docstrings (Google style)
+- Keep functions focused and testable
+- Mock external dependencies in tests
+- Use `tmp_path` fixture for file system operations in tests
