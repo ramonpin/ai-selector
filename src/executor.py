@@ -4,7 +4,6 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from pathlib import Path
 
 from .config import Agent
 
@@ -12,16 +11,17 @@ from .config import Agent
 def clear_screen() -> None:
     """Clear the terminal screen."""
     # Use 'cls' on Windows, 'clear' on Unix-like systems
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def log_execution(agent: Agent, current_dir: str) -> None:
-    """
-    Log the agent execution to a log file in the agent's directory.
+    """Log the agent execution to a log file in the agent's directory.
 
     Args:
+    ----
         agent: The agent being executed
         current_dir: Current working directory from where selector was run
+
     """
     log_file = agent.full_path / "agent-execution.log"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -34,9 +34,10 @@ def log_execution(agent: Agent, current_dir: str) -> None:
     ]
 
     if agent.env_vars:
-        log_lines.append(f"[{timestamp}] Environment variables: {', '.join(agent.env_vars.keys())}")
+        env_vars_str = ", ".join(agent.env_vars.keys())
+        log_lines.append(f"[{timestamp}] Environment variables: {env_vars_str}")
 
-    log_lines.append(f"[{timestamp}] ====================================================")
+    log_lines.append(f"[{timestamp}] ======== Executing Agent ========")
     log_lines.append("")  # Empty line for readability
 
     try:
@@ -47,17 +48,19 @@ def log_execution(agent: Agent, current_dir: str) -> None:
 
 
 def execute_agent(agent: Agent) -> int:
-    """
-    Execute the selected agent with its environment variables.
+    """Execute the selected agent with its environment variables.
 
     The command is executed in the current directory (not changed to agent's directory).
     Environment variables from the agent's .env are added to the process environment.
 
     Args:
+    ----
         agent: The agent to execute
 
     Returns:
+    -------
         Exit code from the agent process
+
     """
     # Get current directory before clearing screen
     current_dir = os.getcwd()
@@ -69,13 +72,13 @@ def execute_agent(agent: Agent) -> int:
     clear_screen()
 
     # Display execution info
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Starting: {agent.name}")
     print(f"Command: {agent.command}")
     print(f"Executed from: {current_dir}")
     if agent.env_vars:
         print(f"Environment variables: {', '.join(agent.env_vars.keys())}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     try:
         # Prepare environment: copy current environment and add agent's variables

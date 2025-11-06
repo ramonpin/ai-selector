@@ -1,9 +1,9 @@
 """Configuration management for AI Agent Selector."""
 
 import os
-from pathlib import Path
-from typing import Optional
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import cast
 
 from dotenv import dotenv_values, load_dotenv
 
@@ -44,13 +44,14 @@ def get_agents_directory() -> Path:
 
 
 def discover_agents() -> list[Agent]:
-    """
-    Discover all agents by scanning for .env files in AI_AGENTS_DIR.
+    """Discover all agents by scanning for .env files in AI_AGENTS_DIR.
 
     An agent is any subdirectory that contains a .env file with an ALIAS variable.
 
-    Returns:
+    Returns
+    -------
         List of discovered Agent objects
+
     """
     agents_dir = get_agents_directory()
     agents: list[Agent] = []
@@ -74,8 +75,10 @@ def discover_agents() -> list[Agent]:
                 print(f"Warning: {item.name}/.env has no ALIAS variable, skipping")
                 continue
 
-            # Remove ALIAS from env_vars as it's not an environment variable
-            env_vars_only = {k: v for k, v in env_vars.items() if k != "ALIAS"}
+            env_vars_only = cast(
+                dict[str, str],
+                {k: v for k, v in env_vars.items() if k != "ALIAS" and v is not None},
+            )
 
             agent = Agent(
                 name=item.name,

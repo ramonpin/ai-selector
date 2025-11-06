@@ -1,11 +1,12 @@
 """Interactive agent selector using questionary."""
 
 from pathlib import Path
+from typing import cast
+
 import questionary
 from questionary import Style
 
 from .config import Agent
-
 
 # Custom style for the selector
 custom_style = Style(
@@ -41,14 +42,16 @@ def display_logo() -> None:
 
 
 def select_agent(agents: list[Agent]) -> Agent | None:
-    """
-    Display an interactive menu to select an agent.
+    """Display an interactive menu to select an agent.
 
     Args:
+    ----
         agents: List of available agents
 
     Returns:
+    -------
         Selected Agent or None if cancelled
+
     """
     if not agents:
         print("No agents available.")
@@ -64,13 +67,16 @@ def select_agent(agents: list[Agent]) -> Agent | None:
     choices = [{"name": agent.name, "value": agent} for agent in agents]
 
     try:
-        selected = questionary.select(
-            "Select an AI agent:",
-            choices=choices,
-            style=custom_style,
-            use_shortcuts=True,
-            use_arrow_keys=True,
-        ).ask()
+        selected = cast(
+            Agent | None,
+            questionary.select(
+                "Select an AI agent:",
+                choices=choices,
+                style=custom_style,
+                use_shortcuts=True,
+                use_arrow_keys=True,
+            ).ask(),
+        )
 
         return selected
 

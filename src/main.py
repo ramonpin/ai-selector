@@ -4,12 +4,12 @@
 import sys
 
 from src.config import discover_agents
-from src.selector import select_agent
 from src.executor import execute_agent
+from src.selector import select_agent
 
 
 def main() -> int:
-    """Main entry point for the AI Agent Selector."""
+    """Run the main application logic."""
     try:
         # Discover agents by scanning for .env files
         available_agents = discover_agents()
@@ -42,6 +42,7 @@ def main() -> int:
     except Exception as e:
         print(f"Unexpected error: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 
