@@ -61,6 +61,14 @@ Ejecuta el selector:
 uv run main.py
 ```
 
+O crea un alias para ejecutarlo desde cualquier directorio:
+
+```bash
+alias ai-selector='uv run --project /ruta/a/ai-selector /ruta/a/ai-selector/main.py'
+```
+
+**Nota**: Usa `--project` en lugar de `--directory` para que el agente se ejecute en el directorio actual, no en el directorio del proyecto ai-selector. Debes especificar la ruta completa al script después de `--project`.
+
 El selector mostrará un menú interactivo donde podrás:
 - Navegar con las flechas ↑/↓
 - Seleccionar con Enter

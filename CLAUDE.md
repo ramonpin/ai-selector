@@ -29,8 +29,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Running the Application
 - `uv run main.py` - Execute the AI agent selector
+- `uv run --project /path/to/ai-selector main.py` - Execute from any directory (use `--project` not `--directory`)
 - First-time setup: `cp .env.example .env` and configure AI_AGENTS_DIR
 - Each agent needs a `.env` file with an `ALIAS` variable
+
+**Important**: When creating an alias or script to run ai-selector, use `--project` instead of `--directory`:
+```bash
+alias ai-selector='uv run --project /path/to/ai-selector /path/to/ai-selector/main.py'
+```
+This ensures the agent executes in your current working directory, not in the ai-selector project directory. Note that you must specify the full path to main.py as the second argument.
 
 ### Testing
 - Use `uv add --dev pytest` to add pytest as a dev dependency

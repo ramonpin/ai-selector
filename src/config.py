@@ -26,7 +26,10 @@ class Agent:
 
 def get_agents_directory() -> Path:
     """Get the agents directory from environment variable."""
-    load_dotenv()
+    # Load .env from ai-selector project root (not current working directory)
+    project_root = Path(__file__).parent.parent
+    env_file = project_root / ".env"
+    load_dotenv(env_file)
 
     agents_dir = os.getenv("AI_AGENTS_DIR", "~/ia")
     path = Path(agents_dir).expanduser().resolve()
