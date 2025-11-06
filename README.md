@@ -10,6 +10,44 @@ Este proyecto permite gestionar y ejecutar múltiples agentes de IA que están o
 
 ## Instalación
 
+### Opción 1: Ejecución directa con uvx (recomendado para uso ocasional)
+
+La forma más sencilla de usar ai-selector es con `uvx`, que descarga y ejecuta la última versión desde PyPI sin instalación:
+
+```bash
+uvx ai-selector
+```
+
+### Opción 2: Instalación como herramienta con uv (recomendado para uso frecuente)
+
+Para tener ai-selector disponible permanentemente como comando:
+
+```bash
+uv tool install ai-selector
+```
+
+Después podrás ejecutarlo directamente:
+
+```bash
+ai-selector
+```
+
+Para actualizar a la última versión:
+
+```bash
+uv tool upgrade ai-selector
+```
+
+Para desinstalar:
+
+```bash
+uv tool uninstall ai-selector
+```
+
+### Opción 3: Desarrollo local
+
+Si quieres contribuir o modificar el código:
+
 1. Clona o descarga este repositorio
 2. Instala las dependencias:
 
