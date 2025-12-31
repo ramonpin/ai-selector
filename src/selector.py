@@ -1,5 +1,6 @@
 """Interactive agent selector using questionary."""
 
+import shutil
 from pathlib import Path
 from typing import cast
 
@@ -26,7 +27,21 @@ custom_style = Style(
 
 
 def display_logo() -> None:
-    """Display the AI Selector logo from logo.txt file."""
+    """Display the AI Selector logo from logo.txt file or alternative text."""
+    # Get terminal width
+    try:
+        columns = shutil.get_terminal_size().columns
+    except (AttributeError, OSError):
+        # Fallback if terminal size cannot be determined
+        columns = 80
+
+    # If terminal is too narrow, display simple text instead of logo
+    if columns < 60:
+        print("AI-SELECTOR")
+        print()  # Add blank line for spacing
+        return
+
+    # Terminal is wide enough, try to display logo
     # Get project root directory (parent of src)
     project_root = Path(__file__).parent.parent
     logo_path = project_root / "logo.txt"

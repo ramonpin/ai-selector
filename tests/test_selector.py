@@ -76,6 +76,65 @@ def test_display_logo_file_not_found(mock_open: MagicMock) -> None:
     display_logo()
 
 
+@patch("src.selector.shutil.get_terminal_size")
+def test_display_logo_narrow_terminal(
+    mock_get_terminal_size: MagicMock, capsys: pytest.CaptureFixture
+) -> None:
+    """Test display_logo with terminal width < 60 displays alternative text."""
+    from src.selector import display_logo
+
+    # Simulate narrow terminal
+    mock_get_terminal_size.return_value.columns = 50
+
+    display_logo()
+    captured = capsys.readouterr()
+
+    assert "AI-SELECTOR" in captured.out
+    assert captured.out.count("\n") >= 2  # Text plus blank line
+
+
+@patch("src.selector.shutil.get_terminal_size")
+@patch("builtins.open")
+def test_display_logo_wide_terminal_logo_exists(
+    mock_open: MagicMock,
+    mock_get_terminal_size: MagicMock,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    """Test display_logo with terminal width >= 60 displays logo."""
+    from src.selector import display_logo
+
+    # Simulate wide terminal
+    mock_get_terminal_size.return_value.columns = 80
+    mock_open.return_value.__enter__.return_value.read.return_value = "test_logo"
+
+    display_logo()
+    captured = capsys.readouterr()
+
+    assert "test_logo" in captured.out
+    assert "AI-SELECTOR" not in captured.out
+
+
+@patch("src.selector.shutil.get_terminal_size")
+@patch("builtins.open")
+def test_display_logo_terminal_size_error(
+    mock_open: MagicMock,
+    mock_get_terminal_size: MagicMock,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    """Test display_logo handles terminal size errors with fallback."""
+    from src.selector import display_logo
+
+    # Simulate terminal size error (fallback to 80)
+    mock_get_terminal_size.side_effect = OSError("Cannot get terminal size")
+    mock_open.return_value.__enter__.return_value.read.return_value = "test_logo"
+
+    display_logo()
+    captured = capsys.readouterr()
+
+    # Fallback is 80 (>= 60), so logo should be displayed
+    assert "test_logo" in captured.out
+
+
 @patch("src.selector.display_logo")
 @patch("questionary.select", side_effect=KeyboardInterrupt)
 def test_select_agent_keyboard_interrupt(

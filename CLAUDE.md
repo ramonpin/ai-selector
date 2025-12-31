@@ -43,7 +43,7 @@ This ensures the agent executes in your current working directory, not in the ai
 The project uses a comprehensive testing and quality assurance setup:
 
 **Quick Commands (using justfile):**
-- `just test` - Run the full test suite (28 tests)
+- `just test` - Run the full test suite (31 tests)
 - `just lint` - Run ruff linter and formatter
 - `just qa` - Run complete quality assurance (lint + type check + tests)
 
@@ -66,7 +66,7 @@ Install hooks: `pre-commit install`
 
 **Test Structure:**
 - `tests/test_config.py` - Tests for agent discovery and configuration (8 tests)
-- `tests/test_selector.py` - Tests for interactive selection UI (6 tests)
+- `tests/test_selector.py` - Tests for interactive selection UI (9 tests)
 - `tests/test_executor.py` - Tests for agent execution (8 tests)
 - `tests/test_main.py` - Tests for main entry point (6 tests)
 
@@ -100,7 +100,7 @@ Install hooks: `pre-commit install`
 - Type-safe with strict mypy checking; uses `cast()` to ensure proper type narrowing
 
 **`src/selector.py`** - Interactive CLI:
-- `display_logo()`: Displays the branded logo from `logo.txt` (ANSI colors supported)
+- `display_logo()`: Displays the branded logo from `logo.txt` (ANSI colors supported) or "AI-SELECTOR" text on narrow terminals (<60 columns)
 - `select_agent()`: Presents questionary menu with agent names (sorted alphabetically)
 - Custom styling for better UX
 - Returns selected Agent or None if cancelled
@@ -182,6 +182,7 @@ Log entries are appended, creating a history of all executions.
 - Agents are sorted alphabetically in the selector menu
 - Logo is displayed from `logo.txt` in project root (optional, gracefully skipped if missing)
 - Logo supports ANSI escape codes for colored terminal output
+- On terminals narrower than 60 columns, displays "AI-SELECTOR" text instead of logo
 
 ## Development Workflow
 
@@ -189,7 +190,7 @@ Log entries are appended, creating a history of all executions.
 1. Run `just qa` to ensure all quality checks pass
 2. Pre-commit hooks will automatically run on `git commit`
 3. If hooks fail, fix issues and re-stage changes
-4. All 28 tests must pass
+4. All 31 tests must pass
 
 **Adding new features:**
 1. Write tests first (TDD approach recommended)
